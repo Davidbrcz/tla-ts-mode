@@ -419,7 +419,13 @@
 
   (setq-local treesit-simple-indent-rules
               '((tlaplus
+                 ;; heavily inspiered by cmake-ts-mode rules
+                 ;; TLA+ constructs
                  ((parent-is "if_then_else") parent tla-ts-mode-indentation-offset)
+                 ((parent-is "operator_definition") parent tla-ts-mode-indentation-offset)
+                 ((query "(bounded_quantification expression: (_) @e)") parent tla-ts-mode-indentation-offset)
+                 ;; Pcal construct
+                 ((parent-is "pcal_while") parent tla-ts-mode-indentation-offset)
                  (no-node parent 0)
                  (catch-all parent 0)
                  ))
@@ -453,3 +459,19 @@
 (provide 'tla-ts-mode)
 
 ;;; tla-mode.el ends here
+(setq q
+      '((bounded_quantification
+         expression: (_) @e)))
+(setq qstr "(bounded_quantification expression: (_) @e)")
+(treesit-query-validate 'tlaplus qstr)
+;; (defun test-capture()
+;;     (interactive)
+;;     (mapcar
+;;      (lambda (result)
+;;        (let ((name (car result))
+;;              (node (cdr result))
+;;              )
+;;          (message "For %s got %s" name  (treesit-node-text node))
+;;          ))
+;;      (treesit-query-capture (treesit-buffer-root-node)
+;;                            q)))
